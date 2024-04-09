@@ -5,6 +5,5 @@ def test_function():
 
     inner_function()
 
-
-#inner_function() - среда не видит эту ф-цию вне test_function()
-#чтобы распечатать string_, надо вызвать ф-цию test_function()
+# inner_function() - среда не видит эту ф-цию вне test_function()
+# чтобы распечатать string_, надо вызвать ф-цию test_function()
