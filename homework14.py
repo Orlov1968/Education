@@ -7,4 +7,3 @@ class Buiding:
     def __eq__(self, other):
         return self.numberOfFloors == other.buildingType
 
-
