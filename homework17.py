@@ -5,7 +5,7 @@ class Vehicle:
     vehicle_type = "none"
 
 
-class Car(Vehicle):
+class Car:
     price = 1000000
 
     def horse_powers(self, horse_powers):
@@ -13,7 +13,7 @@ class Car(Vehicle):
         return self.horse_powers
 
 
-class Nissan(Car):
+class Nissan(Vehicle, Car):
     vehicle_type = "sedan"
     price = 1200000
 
