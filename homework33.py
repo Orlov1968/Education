@@ -18,7 +18,7 @@ class Customer(threading.Thread):
         self.number = number
 
     def run(self):
-        cafe.serve_customer()
+        cafe.serve_customer(Customer(self.number).number)
 
 
 class Cafe:
@@ -43,8 +43,8 @@ class Cafe:
                 print(f"Посетитель {customer} сел за стол {tables[t]}.")
                 time.sleep(5)
                 print(f"Посетитель номер {customer} покушал и ушёл.")
-            else:
-                print(f"Посетитель {customer} ожидает свободный стол")
+
+            print(f"Посетитель {customer} ожидает свободный стол")
 
 
 table_1 = Table(1)
