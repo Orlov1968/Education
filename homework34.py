@@ -21,11 +21,11 @@ class WarehouseManager:
     def run(self, list_new):
         processes = []
         for list_1 in list_new:
-            p = Process(target=self.process_request, args=(list_1,))
-            processes.append(p)
-            p.start()
-        for p in processes:
-            p.join()
+            proc = Process(target=self.process_request, args=(list_1,))
+            processes.append(proc)
+            proc.start()
+        for proc in processes:
+            proc.join()
 
 
 if __name__ == "__main__":
