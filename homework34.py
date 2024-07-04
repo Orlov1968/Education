@@ -1,50 +1,45 @@
-from multiprocessing import Process, Event
-
-list_1 = [("product1", "receipt", 100),
-          ("product2", "receipt", 150),
-          ("product1", "shipment", 30),
-          ("product3", "receipt", 200),
-          ("product2", "shipment", 50),
-          ("product1", "receipt", 80)]
-dict_1 = {}
+from multiprocessing import Process, Lock, Manager
 
 
-def proces_request():
-    for i in list_1:
-        if i[1] == "receipt":
-            key = i[0]
-            value = i[2]
-            if key in dict_1:
-                dict_1[key] += value
-            else:
-                dict_1[key] = value
-   # event.set()
-    return dict_1
+class WarehouseManager:
+    def __init__(self, data, lock):
+        self.lock = lock
+        self.data = data
+
+    def process_request(self, list_1: tuple):
+        product, action, quantity = list_1
+        with self.lock:
+            if action == "receipt":
+                if product in self.data:
+                    self.data[product] += quantity
+                else:
+                    self.data[product] = quantity
+            elif action == "shipment":
+                if product in self.data and self.data[product] >= quantity:
+                    self.data[product] -= quantity
+
+    def run(self, list_new):
+        processes = []
+        for list_1 in list_new:
+            p = Process(target=self.process_request, args=(list_1,))
+            processes.append(p)
+            p.start()
+        for p in processes:
+            p.join()
 
 
-def shipment():
-    dict_2 = {}
-    dict_2 = proces_request()
-   # event.wait()
-    for i in list_1:
-        if i[1] == "shipment":
-            product = i[0]
-            quantity = i[2]
-            if product in dict_2 and dict_2[product] >= quantity:
-                dict_2[product] -= quantity
-            else:
-                print("Такого продукта нет на складе")
-    print(dict_2)
+if __name__ == "__main__":
+    list_new = [
+        ("product1", "receipt", 100),
+        ("product2", "receipt", 150),
+        ("product1", "shipment", 30),
+        ("product3", "receipt", 200),
+        ("product2", "shipment", 50)
+    ]
+    with Manager() as manager:
+        data = manager.dict()
+        lock = Lock()
+        warehouse_manager = WarehouseManager(data, lock)
+        warehouse_manager.run(list_new)
 
-
-shipment()
-
-# if __name__ == "__main__":
-#     event = Event()
-#     proces_request_proc = Process(proces_request)
-#     shipment_proc = Process(shipment)
-#     proces_request_proc.start()
-#     shipment_proc.start()
-#     proces_request_proc.join()
-#     shipment_proc.join()
-
+        print(data)
