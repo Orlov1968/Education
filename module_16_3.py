@@ -18,7 +18,7 @@ async def add_info(username: str, age: int) -> str:
 
 
 @app.put('/user/{user_id}/{username}/{age}')
-async def update_info(user_id: int, username: str, age: int) -> str:
+async def update_info(user_id: str, username: str, age: int) -> str:
     users[user_id] = f"Имя: {username} Возраст: {age}"
     return f"User {user_id} has been updated"
 
